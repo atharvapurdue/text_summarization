@@ -1,6 +1,8 @@
 import numpy as np 
 import pandas as pd
 import os 
+from rouge import Rouge
+
 
 import spacy 
 import pytextrank
@@ -8,24 +10,35 @@ import pytextrank
 from pprint import PrettyPrinter #print in a pretty way 
 pp = PrettyPrinter()
 
-def summary_for_article(num,df,nlp,prin=False):
+def compute_f1_score(df, nlp, num=20):
+    rouge = Rouge()
+    scores = []
+    ans = ""
+
+    for i in range(20):
+        doc = nlp(df.article[i])
+        for j in doc._.textrank.summary(limit_phrases=10, limit_sentences=1):
+            ans+=str(j)
+            score = rouge.get_scores(ans, df.highlights[i])
+            score = score[0]
+            scores.append(score["rouge-l"]["f"])
+
+    return np.mean(scores)
+
+def summary_score(df,nlp,prin=False):
     
     ans = "" # collecting the summary from the generator
-    doc = nlp(df.article[num]) #apply the pipeline
+    doc = nlp(df.article[:20]) #apply the pipeline
+    rouge = Rouge()
+    # take our top 20 and compute
     
     for i in doc._.textrank.summary(limit_phrases=10, limit_sentences=1): #get the summary
         ans+=str(i)
+        score = rouge.get_scores(ans, df.highlights[20])
+
+    #mean_scores = rouge.get_scores(ans, df.highlights.to_list(), avg=True)
         
-    phrases_and_ranks = [ (phrase.chunks[0], phrase.rank) for phrase in doc._.phrases] # get important phrases
-    
-    if prin: # print
-        print(df.article[num])
-        print("\n_______ to ______\n")
-        print(ans)
-        print("\n_______ important phrases ______\n")
-        pp.pprint(phrases_and_ranks[:10])
-        
-    return ans
+    #return mean_scores
 
 
 def load_datasets(path_to_data_folder):
@@ -47,9 +60,8 @@ def main():
     #spacy.cli.download("en_core_web_lg")
     nlp = spacy.load("en_core_web_lg")
     nlp.add_pipe("textrank")
-    for i in range(0,21):
-        print("\n....",i,"")
-        summary_for_article(i, df, nlp, True)
+    print(compute_f1_score(df,nlp))
+    
 
 
 if __name__=='__main__':
