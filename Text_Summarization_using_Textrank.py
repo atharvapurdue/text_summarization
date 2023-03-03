@@ -5,6 +5,22 @@ from summa.summarizer import summarize
 from summa import keywords
 from pprint import PrettyPrinter #print in a pretty way 
 pp = PrettyPrinter()
+from rouge import Rouge
+
+def compute_f1_score(df, num=20):
+    rouge = Rouge()
+    scores = []
+    ans = ""
+
+    for i in range(num):
+        #doc = nlp(df.article[i])
+        article = df.article[i]
+        summary = summarize(article, ratio=0.1)
+        score = rouge.get_scores(summary, df.highlights[i])
+        score = score[0]
+        scores.append(score["rouge-l"]["f"])
+
+    return np.mean(scores)
 
 
 def summary_for_article(num, df, prin=False):
@@ -42,10 +58,8 @@ def load_datasets(train_path, test_path, validation_path):
 
 
 def main():
-    df = load_datasets('C:\\Users\\navya\\Downloads\\train.csv', 'C:\\Users\\navya\\Downloads\\test.csv', 'C:\\Users\\navya\\Downloads\\validation.csv')
-    for i in range(0,21):
-        print("\n....",i,"")
-        summary_for_article(i, df, True)
+    df = load_datasets('data/train.csv', 'data/test.csv', 'data/validation.csv')
+    print(compute_f1_score(df))
 
 
 if __name__=='__main__':
