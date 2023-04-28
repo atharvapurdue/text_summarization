@@ -1,3 +1,13 @@
+##
+# CS 590 Group Project
+# 
+##
+
+# most of the code here comes from 
+# https://huggingface.co/docs/transformers/training
+# and 
+# https://github.com/huggingface/transformers/tree/main/examples/pytorch/summarization
+
 from datasets import load_dataset
 import transformers
 from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
@@ -7,8 +17,6 @@ import evaluate
 import numpy as np
 import torch
 torch.backends.cuda.matmul.allow_tf32 = True
-
-
 
 tokenizer = AutoTokenizer.from_pretrained("facebook/bart-large-cnn")
 model = AutoModelForSeq2SeqLM.from_pretrained("facebook/bart-large-cnn")
