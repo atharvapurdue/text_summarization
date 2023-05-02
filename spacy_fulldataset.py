@@ -19,7 +19,7 @@ def eval(example):
     doc = nlp(example["article"])
     tr = doc._.textrank
     summary = ""
-    for sent in tr.summary(limit_phrases=10, limit_sentences=2):
+    for sent in tr.summary(limit_phrases=10, limit_sentences=1):
         summary += str(sent)
     example["prediction"] = summary
     return example
@@ -27,9 +27,11 @@ def eval(example):
 def compute_metrics(example):
     """
     """
-    pred = example["prediction"]
-    ref = example["highlights"]
-    result = metric.compute(predictions=pred, references=ref, use_stemmer=True)
+    pred = list(example["prediction"].split(" "))
+    #print(len(pred))
+    ref = list(example["highlights"].split(" "))
+    pred = pred[:len(ref)]
+    result = metric.compute(predictions=pred, references=ref)
     return result
 
 def main():
@@ -38,7 +40,7 @@ def main():
     #metric = evaluate.load('rouge')
 
     train_dataset_preds = train_dataset.map(eval, num_proc=64)
-    results = train_dataset_preds.map(compute_metrics)
+    results = train_dataset_preds.map(compute_metrics, num_proc=64)
     print(results)
 
 
