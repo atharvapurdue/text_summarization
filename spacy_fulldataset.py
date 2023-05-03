@@ -92,10 +92,10 @@ def main():
     if method == "textrank":
         nlp.add_pipe("textrank")
     
-    # load our dataset from HuggingFace, using the training
+    # load our dataset from HuggingFace, using the testing
     # data
     cnn_dailymail = load_dataset('cnn_dailymail', '3.0.0')
-    train_dataset = cnn_dailymail['train']
+    train_dataset = cnn_dailymail['test']
 
     # eval using one of the above methods
     if method == "textrank":
