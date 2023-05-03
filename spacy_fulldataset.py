@@ -105,9 +105,13 @@ def main():
 
     # compute ROUGE scores
     results = train_dataset_preds.map(_compute_metrics, num_proc=64)
-    rouge_results = {}
+    results_flatten = results.flatten()
+    rouge_results = {"rouge-1": np.mean(list(results_flatten["rouge-1.f"])),
+                     "rouge-2": np.mean(list(results_flatten["rouge-2.f"])),
+                     "rouge-l" : np.mean(list(results_flatten["rouge-l.f"]))}
 
-    print(results["rouge-1"])
+
+    print(rouge_results)
 
 
 if __name__=='__main__':
