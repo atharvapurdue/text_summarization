@@ -111,7 +111,7 @@ for p in preds:
     preds_text.append(summary[:-1])
 
 # Create a new DataFrame with the predicted summaries and the corresponding texts
-output_df = pd.DataFrame({'Predicted Summary': preds_text, 'Text': test_df['article'], 'Actual Summary': test_df['highlights']})
+output_df = pd.DataFrame({'Article': test_df['article'], 'Actual Summary': test_df['highlights'], 'Predicted Summary': preds_text})
 
 # Write the DataFrame to a CSV file
 output_df.to_csv('output.csv', index=False)
