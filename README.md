@@ -1,4 +1,4 @@
-# text_summarization
+# Exploration of Text Summarization Methods and Techniques
 Researching and Building a text summarization AI models 
 
 To create the environment using conda:
@@ -6,10 +6,13 @@ To create the environment using conda:
 conda env create -f environment.yml
 ```
 
-# spACy, HeapQ
-To 
+# spACy, HeapQ, TextRank
+To use the extractive methods mentioned in the paper and in our presentation, use the following command, methods are `textrank` and `heapq`. If you haven't downloaded the spACy `en_core_web_lg` package, use `True`.
+```
+python -m spacy_fulldataset --method=[METHOD] --download=[True|False]
+```
 
-# BART baseline
+# BART 
 In order to generate a baseline result for BART, the shell script `text_summarization_bart.sh` should be run, but in order to do so, the path should be changed to a local installation of `transformers` from HuggingFace, installed from source. The file `bart_baseline.out` is a text file with the shell script output from a `nohup` command.
 
 ## Baseline Results:
