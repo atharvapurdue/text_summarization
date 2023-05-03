@@ -91,8 +91,6 @@ def main():
         nlp = spacy.load('en_core_web_lg')
     if method == "textrank":
         nlp.add_pipe("textrank")
-    else:
-        nlp.add_pipe("heapq")
     
     # load our dataset from HuggingFace, using the training
     # data
