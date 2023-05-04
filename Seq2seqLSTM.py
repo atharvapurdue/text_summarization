@@ -52,14 +52,14 @@ train_y_out = pad_sequences(train_y_out, maxlen=s_maxlen, padding='post')
 
 # Define the model architecture
 latent_dim = 128
-# Encoder
+# Encoder part
 enc_input = Input(shape=(t_maxlen, ))
 enc_embed = Embedding(t_vocab_size, latent_dim, input_length=t_maxlen)(enc_input)
 enc_lstm = Bidirectional(LSTM(latent_dim, return_state=True))
 enc_outputs, enc_fh, enc_fc, enc_bh, enc_bc = enc_lstm(enc_embed)
 enc_h = Concatenate(axis=-1, name='enc_h')([enc_fh, enc_bh])
 enc_c = Concatenate(axis=-1, name='enc_c')([enc_fc, enc_bc])
-# Decoder
+# Decoder part
 dec_input = Input(shape=(None, ))
 dec_embed = Embedding(s_vocab_size, latent_dim)(dec_input)
 dec_lstm = LSTM(latent_dim*2, return_sequences=True, return_state=True, dropout=0.3, recurrent_dropout=0.2)

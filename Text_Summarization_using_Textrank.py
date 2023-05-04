@@ -24,7 +24,7 @@ def compute_f1_score(df, num=20):
 
     return np.mean(scores)
 
-
+#define Summary_for_article function
 def summary_for_article(num, df, prin=False):
     
     article = df.article[num]
